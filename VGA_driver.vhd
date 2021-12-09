@@ -15,7 +15,7 @@
 
 -- PROGRAM		"Quartus Prime"
 -- VERSION		"Version 17.0.0 Build 595 04/25/2017 SJ Lite Edition"
--- CREATED		"Wed Dec 08 15:21:20 2021"
+-- CREATED		"Wed Dec 08 20:37:29 2021"
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.all; 
@@ -27,7 +27,7 @@ ENTITY VGA_driver IS
 	(
 		CLK :  IN  STD_LOGIC;
 		RST :  IN  STD_LOGIC;
-		pin_name1 :  IN  STD_LOGIC;
+		I_READ :  IN  STD_LOGIC;
 		SEL :  IN  STD_LOGIC_VECTOR(31 DOWNTO 0);
 		O_locked :  OUT  STD_LOGIC
 	);
@@ -76,7 +76,7 @@ PORT MAP(CLK => SYNTHESIZED_WIRE_5,
 		 RST => RST,
 		 H_BUFFER_SYNC => SYNTHESIZED_WIRE_6,
 		 V_BUFFER_SYNC => SYNTHESIZED_WIRE_6,
-		 R_ENABLE => pin_name1,
+		 R_ENABLE => I_READ,
 		 DATA => SYNTHESIZED_WIRE_3);
 
 
