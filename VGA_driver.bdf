@@ -22,22 +22,6 @@ agreement for further details.
 (header "graphic" (version "1.4"))
 (pin
 	(input)
-	(rect 48 216 216 232)
-	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
-	(text "SEL[31..0]" (rect 5 0 56 12)(font "Arial" ))
-	(pt 168 8)
-	(drawing
-		(line (pt 84 12)(pt 109 12))
-		(line (pt 84 4)(pt 109 4))
-		(line (pt 113 8)(pt 168 8))
-		(line (pt 84 12)(pt 84 4))
-		(line (pt 109 4)(pt 113 8))
-		(line (pt 109 12)(pt 113 8))
-	)
-	(text "VCC" (rect 128 7 148 17)(font "Arial" (font_size 6)))
-)
-(pin
-	(input)
 	(rect 48 368 224 384)
 	(text "INPUT" (rect 133 0 161 10)(font "Arial" (font_size 6)))
 	(text "CLK" (rect 9 0 30 12)(font "Arial" ))
@@ -72,7 +56,23 @@ agreement for further details.
 	(input)
 	(rect 56 248 224 264)
 	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
-	(text "I_READ" (rect 5 0 46 12)(font "Arial" ))
+	(text "I_READ" (rect 5 0 45 12)(font "Arial" ))
+	(pt 168 8)
+	(drawing
+		(line (pt 84 12)(pt 109 12))
+		(line (pt 84 4)(pt 109 4))
+		(line (pt 113 8)(pt 168 8))
+		(line (pt 84 12)(pt 84 4))
+		(line (pt 109 4)(pt 113 8))
+		(line (pt 109 12)(pt 113 8))
+	)
+	(text "VCC" (rect 128 7 148 17)(font "Arial" (font_size 6)))
+)
+(pin
+	(input)
+	(rect 48 216 216 232)
+	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
+	(text "SEL[4..0]" (rect 5 0 52 12)(font "Arial" ))
 	(pt 168 8)
 	(drawing
 		(line (pt 84 12)(pt 109 12))
@@ -100,33 +100,20 @@ agreement for further details.
 		(line (pt 78 12)(pt 82 8))
 	)
 )
-(symbol
-	(rect 488 176 680 256)
-	(text "char_library" (rect 5 0 62 12)(font "Arial" ))
-	(text "inst2" (rect 8 64 31 76)(font "Arial" ))
-	(port
-		(pt 0 32)
-		(input)
-		(text "CLK" (rect 0 0 21 12)(font "Arial" ))
-		(text "CLK" (rect 21 27 42 39)(font "Arial" ))
-		(line (pt 0 32)(pt 16 32))
-	)
-	(port
-		(pt 0 48)
-		(input)
-		(text "SEL[31..0]" (rect 0 0 51 12)(font "Arial" ))
-		(text "SEL[31..0]" (rect 21 43 72 55)(font "Arial" ))
-		(line (pt 0 48)(pt 16 48)(line_width 3))
-	)
-	(port
-		(pt 192 32)
-		(output)
-		(text "DATA[6..0]" (rect 0 0 54 12)(font "Arial" ))
-		(text "DATA[6..0]" (rect 126 27 180 39)(font "Arial" ))
-		(line (pt 192 32)(pt 176 32)(line_width 3))
-	)
+(pin
+	(output)
+	(rect 1168 168 1344 184)
+	(text "OUTPUT" (rect 1 0 39 10)(font "Arial" (font_size 6)))
+	(text "Output" (rect 90 0 123 12)(font "Arial" ))
+	(pt 0 8)
 	(drawing
-		(rectangle (rect 16 16 176 64))
+		(line (pt 0 8)(pt 52 8))
+		(line (pt 52 4)(pt 78 4))
+		(line (pt 52 12)(pt 78 12))
+		(line (pt 52 12)(pt 52 4))
+		(line (pt 78 4)(pt 82 8))
+		(line (pt 82 8)(pt 78 12))
+		(line (pt 78 12)(pt 82 8))
 	)
 )
 (symbol
@@ -149,7 +136,7 @@ agreement for further details.
 (symbol
 	(rect 248 304 408 448)
 	(text "clock_divider" (rect 42 -1 129 15)(font "Arial" (font_size 10)))
-	(text "inst1" (rect 8 128 30 145)(font "Intel Clear" ))
+	(text "inst1" (rect 8 128 31 140)(font "Arial" ))
 	(port
 		(pt 0 72)
 		(input)
@@ -207,7 +194,7 @@ agreement for further details.
 	)
 )
 (symbol
-	(rect 856 144 1120 288)
+	(rect 864 152 1128 296)
 	(text "char_buffer" (rect 5 0 62 12)(font "Arial" ))
 	(text "inst" (rect 8 128 25 140)(font "Arial" ))
 	(port
@@ -256,45 +243,41 @@ agreement for further details.
 		(pt 264 32)
 		(output)
 		(text "OUTPUT_PIXEL" (rect 0 0 79 12)(font "Arial" ))
-		(text "OUTPUT_PIXEL" (rect 177 27 256 39)(font "Arial" ))
+		(text "OUTPUT_PIXEL" (rect 177 27 243 39)(font "Arial" ))
 		(line (pt 264 32)(pt 248 32))
 	)
 	(drawing
 		(rectangle (rect 16 16 248 128))
 	)
 )
-(connector
-	(pt 816 176)
-	(pt 856 176)
-)
-(connector
-	(pt 816 288)
-	(pt 816 176)
-)
-(connector
-	(pt 792 240)
-	(pt 856 240)
-)
-(connector
-	(pt 856 224)
-	(pt 792 224)
-)
-(connector
-	(pt 792 224)
-	(pt 792 240)
-)
-(connector
-	(pt 792 240)
-	(pt 792 384)
-)
-(connector
-	(pt 712 192)
-	(pt 856 192)
-)
-(connector
-	(pt 680 208)
-	(pt 856 208)
-	(bus)
+(symbol
+	(rect 488 176 680 256)
+	(text "char_library" (rect 5 0 62 12)(font "Arial" ))
+	(text "inst2" (rect 8 64 31 76)(font "Arial" ))
+	(port
+		(pt 0 32)
+		(input)
+		(text "CLK" (rect 0 0 21 12)(font "Arial" ))
+		(text "CLK" (rect 21 27 42 39)(font "Arial" ))
+		(line (pt 0 32)(pt 16 32))
+	)
+	(port
+		(pt 0 48)
+		(input)
+		(text "SEL[4..0]" (rect 0 0 46 12)(font "Arial" ))
+		(text "SEL[4..0]" (rect 21 43 67 55)(font "Arial" ))
+		(line (pt 0 48)(pt 16 48)(line_width 3))
+	)
+	(port
+		(pt 192 32)
+		(output)
+		(text "DATA[6..0]" (rect 0 0 54 12)(font "Arial" ))
+		(text "DATA[6..0]" (rect 126 27 171 39)(font "Arial" ))
+		(line (pt 192 32)(pt 176 32)(line_width 3))
+	)
+	(drawing
+		(rectangle (rect 16 16 176 64))
+	)
 )
 (connector
 	(pt 216 224)
@@ -304,10 +287,6 @@ agreement for further details.
 (connector
 	(pt 224 376)
 	(pt 248 376)
-)
-(connector
-	(pt 712 464)
-	(pt 712 192)
 )
 (connector
 	(pt 232 464)
@@ -350,9 +329,76 @@ agreement for further details.
 	(pt 408 416)
 )
 (connector
-	(pt 856 256)
-	(pt 224 256)
+	(pt 816 184)
+	(pt 864 184)
 )
-(junction (pt 792 240))
+(connector
+	(pt 816 288)
+	(pt 816 184)
+)
+(connector
+	(pt 1136 176)
+	(pt 1136 184)
+)
+(connector
+	(pt 1168 176)
+	(pt 1136 176)
+)
+(connector
+	(pt 1136 184)
+	(pt 1128 184)
+)
+(connector
+	(pt 792 248)
+	(pt 864 248)
+)
+(connector
+	(pt 792 232)
+	(pt 864 232)
+)
+(connector
+	(pt 712 200)
+	(pt 864 200)
+)
+(connector
+	(pt 856 208)
+	(pt 856 216)
+	(bus)
+)
+(connector
+	(pt 680 208)
+	(pt 856 208)
+	(bus)
+)
+(connector
+	(pt 856 216)
+	(pt 864 216)
+	(bus)
+)
+(connector
+	(pt 712 464)
+	(pt 712 200)
+)
+(connector
+	(pt 848 256)
+	(pt 848 264)
+)
+(connector
+	(pt 224 256)
+	(pt 848 256)
+)
+(connector
+	(pt 848 264)
+	(pt 864 264)
+)
+(connector
+	(pt 792 248)
+	(pt 792 384)
+)
+(connector
+	(pt 792 232)
+	(pt 792 248)
+)
 (junction (pt 232 416))
 (junction (pt 472 288))
+(junction (pt 792 248))
