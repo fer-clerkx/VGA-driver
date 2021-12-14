@@ -15,7 +15,7 @@
 
 -- PROGRAM		"Quartus Prime"
 -- VERSION		"Version 17.0.0 Build 595 04/25/2017 SJ Lite Edition"
--- CREATED		"Mon Dec 13 14:38:11 2021"
+-- CREATED		"Tue Dec 14 11:22:55 2021"
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.all; 
@@ -28,7 +28,7 @@ ENTITY VGA_driver IS
 		CLK :  IN  STD_LOGIC;
 		RST :  IN  STD_LOGIC;
 		I_READ :  IN  STD_LOGIC;
-		SEL :  IN  STD_LOGIC_VECTOR(4 DOWNTO 0);
+		SEL :  IN  INTEGER RANGE 0 to 22;
 		O_locked :  OUT  STD_LOGIC;
 		Output :  OUT  STD_LOGIC
 	);
@@ -57,7 +57,7 @@ END COMPONENT;
 
 COMPONENT char_library
 	PORT(CLK : IN STD_LOGIC;
-		 SEL : IN STD_LOGIC_VECTOR(4 DOWNTO 0);
+		 SEL : IN INTEGER RANGE 0 to 22;
 		 DATA : OUT STD_LOGIC_VECTOR(6 DOWNTO 0)
 	);
 END COMPONENT;
