@@ -4,9 +4,9 @@ USE IEEE.NUMERIC_STD.ALL;
 
 ENTITY char_library IS
 	PORT (
-			CLK	:	IN		STD_LOGIC;
-			SEL	:	IN		INTEGER RANGE 0 to 22;
-			DATA	:	OUT	STD_LOGIC_VECTOR(6 DOWNTO 0)
+			CLK, RST	:	IN		STD_LOGIC;
+			SEL		:	IN		INTEGER RANGE 0 TO 22;
+			DATA		:	OUT	STD_LOGIC_VECTOR(6 DOWNTO 0)
 		);
 END char_library;
 
@@ -257,9 +257,11 @@ BEGIN
 		temp <= lib(SEL);
 	END PROCESS;
 
-	INC:process(CLK)
+	INC:process(CLK, RST)
 	BEGIN
-		IF(rising_edge(CLK)) THEN
+		IF(RST = '1') THEN
+			counter <= 0;
+		ELSIF(rising_edge(CLK)) THEN
 			IF(counter >= 8) THEN
 				counter <= 0;
 			ELSE
@@ -268,9 +270,11 @@ BEGIN
 		END IF;
 	END PROCESS;
 	
-	OUTPUT:PROCESS(CLK)
+	OUTPUT:PROCESS(CLK, RST)
 	BEGIN
-		IF(rising_edge(CLK)) THEN
+		IF(RST = '1') THEN
+			DATA <= (OTHERS => '0');
+		ELSIF(rising_edge(CLK)) THEN
 			DATA <= temp(counter);
 		END IF;
 	END PROCESS;

@@ -15,7 +15,7 @@
 
 # Quartus Prime: Generate Tcl File for Project
 # File: VGA_controller.tcl
-# Generated on: Mon Dec 13 15:37:46 2021
+# Generated on: Tue Dec 21 15:37:50 2021
 
 # Load Quartus Prime Tcl Project package
 package require ::quartus::project
@@ -48,18 +48,21 @@ if {$make_assignments} {
 	set_global_assignment -name PROJECT_CREATION_TIME_DATE "14:23:42  NOVEMBER 15, 2021"
 	set_global_assignment -name LAST_QUARTUS_VERSION "17.0.0 Lite Edition"
 	set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
-	set_global_assignment -name VHDL_FILE VGA_controller.vhd
-	set_global_assignment -name VHDL_FILE char_library.vhd
-	set_global_assignment -name VHDL_FILE BUFFER.vhd
-	set_global_assignment -name BDF_FILE VGA_driver.bdf
-	set_global_assignment -name QIP_FILE clock_divider.qip
-	set_global_assignment -name SIP_FILE clock_divider.sip
 	set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 	set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 	set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR "-1"
 	set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (Verilog)"
 	set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
 	set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
+	set_global_assignment -name VHDL_FILE VGA_controller.vhd
+	set_global_assignment -name VHDL_FILE char_library.vhd
+	set_global_assignment -name VHDL_FILE BUFFER.vhd
+	set_global_assignment -name QIP_FILE clock_divider.qip
+	set_global_assignment -name SIP_FILE clock_divider.sip
+	set_global_assignment -name VHDL_FILE VGA_driver.vhd
+	set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+	set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+	set_global_assignment -name VHDL_FILE sync_controller.vhd
 	set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 	set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 	set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
