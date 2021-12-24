@@ -15,15 +15,15 @@ ENTITY sync_controller is
 END sync_controller;
 
 ARCHITECTURE behaviour OF sync_controller IS
-	constant HD		:	integer	:=	639;	--Horizontal definition
-	constant HFP	:	integer	:=	16;	--Horizontal front porch
-	constant HSP	:	integer	:=	96;	--Horizontal sync pulse
-	constant HBP	:	integer	:=	48;	--ho rizontal back porch
+	constant HD		:	integer	:=	799;	--Horizontal definition
+	constant HFP	:	integer	:=	24;	--Horizontal front porch
+	constant HSP	:	integer	:=	72;	--Horizontal sync pulse
+	constant HBP	:	integer	:=	96;	--ho rizontal back porch
 	
 	constant VD		:	integer	:=	479;	--Vertical definition
-	constant VFP	:	integer	:=	10;	--Vertical front porch
-	constant VSP	:	integer	:=	2;		--Vertical sync pulse
-	constant VBP	:	integer	:=	33;	--Vertical back porch
+	constant VFP	:	integer	:=	3;	--Vertical front porch
+	constant VSP	:	integer	:=	7;		--Vertical sync pulse
+	constant VBP	:	integer	:=	10;	--Vertical back porch
 	
 	signal H_POS	: integer := 0;	--horizontal position
 	signal V_POS	: integer := 0;	--vertical position	
@@ -63,16 +63,16 @@ Horizontal_syncs:PROCESS(CLK,RST,H_POS)
 BEGIN
 	if(RST = '1') then
 		H_SYNC <= '0';
-		H_BUF_SYNC <= '0';
+		H_BUF_SYNC <= '1';
 	elsif(rising_edge(CLK)) then
-		if((H_POS <= (HD + HFP)) or (H_POS > (HD + HFP + HSP) AND H_POS < HD + HFP+ HSP + HBP)) THEN
-			H_SYNC <= '0';
+		IF((H_POS <= (HD + HFP)) OR (H_POS > (HD + HFP + HSP) AND H_POS < HD + HFP+ HSP + HBP)) THEN
+			H_SYNC <= '1';
 			H_BUF_SYNC <= '0';
 		ELSIF(H_POS = HD + HFP + HSP + HBP) THEN
-			H_BUF_SYNC <= '1';
-			H_SYNC <= '0';
-		ELSE
 			H_SYNC <= '1';
+			H_BUF_SYNC <= '1';
+		ELSE
+			H_SYNC <= '0';
 			H_BUF_SYNC <= '0';
 		end if;
 	end if;
@@ -82,16 +82,16 @@ Vertical_syncs:PROCESS(CLK,RST,V_POS)
 BEGIN
 	if(RST = '1') then
 		V_SYNC <= '0';
-		V_BUF_SYNC <= '0';
+		V_BUF_SYNC <= '1';
 	elsif(rising_edge(CLK)) then
-		if((V_POS <= (VD + VFP)) or (V_POS > (VD + VSP + VFP) AND V_POS < HD + HFP + HSP + HBP)) THEN
-			V_SYNC <= '0';
+		IF((V_POS <= (VD + VFP)) OR (V_POS > (VD + VFP + VSP) AND V_POS < VD + VFP + VSP + VBP)) THEN
+			V_SYNC <= '1';
 			V_BUF_SYNC <= '0';
-		ELSIF(V_POS = HD + HFP + HSP + HBP) THEN
-			V_SYNC <= '0';
+		ELSIF(V_POS = VD + VFP + VSP + VBP) THEN
+			V_SYNC <= '1';
 			V_BUF_SYNC <= '1';
 		ELSE
-			V_SYNC <= '1';
+			V_SYNC <= '0';
 			V_BUF_SYNC <= '0';
 		end if;
 	end if;
@@ -102,7 +102,7 @@ BEGIN
 	IF(RST = '1') THEN
 		BLANK <= '1';
 	ELSIF(rising_edge(CLK)) THEN
-		IF((H_POS > HD) OR (V_POS > VD)) THEN
+		IF((H_POS > HD + 1) OR (H_POS < 1) OR (V_POS > VD + 1) OR (V_POS < 1)) THEN
 			BLANK <= '0';
 		ELSE
 			BLANK <= '1';

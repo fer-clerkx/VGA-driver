@@ -5,6 +5,8 @@ force vga_driver/SEL 0
 force vga_driver/I_READ 1
 force vga_driver/RST 0
 run 13885
+force I_READ 0
+run 100000
 
 #force vga_driver/I_READ 0
 #force vga_driver/RST 1

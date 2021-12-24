@@ -17,7 +17,7 @@ END char_buffer;
 ARCHITECTURE behaviour OF char_buffer IS
 
 	TYPE char IS ARRAY(8 DOWNTO 0) OF STD_LOGIC_VECTOR(6 DOWNTO 0);	--Variable represents one character
-	TYPE buffer_matrix IS ARRAY(9 DOWNTO 0, 9 DOWNTO 0) OF char;		--A 2D matrix of characters, containing the entire frame
+	TYPE buffer_matrix IS ARRAY(52 DOWNTO 0, 113 DOWNTO 0) OF char;		--A 2D matrix of characters, containing the entire frame
 
 	SIGNAL CHAR_ROW	: INTEGER := 0;	--Keeps track which row of a char is selected
 	SIGNAL H_CHAR_POS	: INTEGER := 0;	--Horizontal position for characters used for loading
@@ -80,12 +80,14 @@ BEGIN
 			IF(R_ENABLE = '0') THEN
 				IF(H_BUFFER_SYNC = '1') THEN
 					H_PIXEL_POS <= 0;
-					V_PIXEL_POS <= V_PIXEL_POS + 1;
+					IF(V_PIXEL_POS < 468) THEN
+						V_PIXEL_POS <= V_PIXEL_POS + 1;
+					END IF;
 				END IF;
 				IF(V_BUFFER_SYNC = '1') THEN
 					V_PIXEL_POS <= 0;
 				END IF;
-				IF(H_PIXEL_POS < 70) THEN
+				IF(H_PIXEL_POS < 791) THEN
 					H_PIXEL_POS <= H_PIXEL_POS + 1;
 				END IF;
 			END IF;
@@ -105,15 +107,17 @@ BEGIN
 			V_CHAR_PIXEL := 0;
 		ELSIF(rising_edge(CLK)) THEN
 			IF(R_ENABLE = '0') THEN
-				IF(H_PIXEL_POS = 70) THEN
+				IF(H_PIXEL_POS = 791 OR V_PIXEL_POS = 468) THEN
 					OUTPUT_PIXEL <= '0';
 				ELSE
 					H_BUFFER_CHAR := H_PIXEL_POS / 7;
 					H_CHAR_PIXEL := H_PIXEL_POS - (H_BUFFER_CHAR * 7);
-					V_BUFFER_CHAR := V_PIXEL_POS / 7;
-					V_CHAR_PIXEL := V_PIXEL_POS - (V_BUFFER_CHAR * 7);
+					V_BUFFER_CHAR := V_PIXEL_POS / 9;
+					V_CHAR_PIXEL := V_PIXEL_POS - (V_BUFFER_CHAR * 9);
 					OUTPUT_PIXEL <= var_buffer(V_BUFFER_CHAR, H_BUFFER_CHAR)(V_CHAR_PIXEL)(H_CHAR_PIXEL);
 				END IF;
+			ELSE
+				OUTPUT_PIXEL <= '0';
 			END IF;
 		END IF;
 	END PROCESS;
