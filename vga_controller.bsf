@@ -41,8 +41,8 @@ agreement for further details.
 	(port
 		(pt 192 32)
 		(output)
-		(text "OUT_BUFF[1..0]" (rect 0 0 69 12)(font "Arial" ))
-		(text "OUT_BUFF[1..0]" (rect 102 27 171 39)(font "Arial" ))
+		(text "OUT_BUFF[6..0]" (rect 0 0 70 12)(font "Arial" ))
+		(text "OUT_BUFF[6..0]" (rect 101 27 171 39)(font "Arial" ))
 		(line (pt 192 32)(pt 176 32)(line_width 3))
 	)
 	(drawing

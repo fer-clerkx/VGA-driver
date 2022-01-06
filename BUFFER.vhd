@@ -16,15 +16,15 @@ END char_buffer;
 
 ARCHITECTURE behaviour OF char_buffer IS
 
-	TYPE char IS ARRAY(8 DOWNTO 0) OF STD_LOGIC_VECTOR(6 DOWNTO 0);	--Variable represents one character
-	TYPE buffer_matrix IS ARRAY(52 DOWNTO 0, 113 DOWNTO 0) OF char;		--A 2D matrix of characters, containing the entire frame
+	TYPE char IS ARRAY(9 DOWNTO 0) OF STD_LOGIC_VECTOR(7 DOWNTO 0);	--Variable represents one character
+	TYPE buffer_matrix IS ARRAY(11 DOWNTO 0, 24 DOWNTO 0) OF char;		--A 2D matrix of characters, containing the entire frame
 
 	SIGNAL CHAR_ROW	: INTEGER := 0;	--Keeps track which row of a char is selected
 	SIGNAL H_CHAR_POS	: INTEGER := 0;	--Horizontal position for characters used for loading
 	SIGNAL V_CHAR_POS : INTEGER := 0;	--Vertical position for characters used for loading
 	SIGNAL H_PIXEL_POS: INTEGER := 0;	--Horizontally selected pixel for outputting data
 	SIGNAL V_PIXEL_POS: INTEGER := 0;	--Vertically selected pixel for outputting data
-	SIGNAL var_buffer	: buffer_matrix := (OTHERS=> (OTHERS=> (OTHERS=> "1010101"))); 	--Contains all the char's, and thus pixels to be displayed
+	SIGNAL var_buffer	: buffer_matrix := (OTHERS=> (OTHERS=> (OTHERS=> "11110000"))); 	--Contains all the char's, and thus pixels to be displayed
 
 BEGIN
 
@@ -34,10 +34,10 @@ BEGIN
 			V_CHAR_POS <= 0;
 			H_CHAR_POS <= 0;
 		ELSIF(rising_edge(CLK)) THEN
-			IF(CHAR_ROW = 8) THEN
-				IF(H_CHAR_POS >= 9) THEN
+			IF(CHAR_ROW = 9) THEN
+				IF(H_CHAR_POS >= 24) THEN
 					H_CHAR_POS <= 0;
-					IF(V_CHAR_POS >= 9) THEN
+					IF(V_CHAR_POS >= 11) THEN
 						V_CHAR_POS <= 0;
 					ELSE
 						V_CHAR_POS <= V_CHAR_POS + 1;
@@ -54,7 +54,7 @@ BEGIN
 		IF(RST = '1') THEN				--Returns to first row of selected character
 			CHAR_ROW <= 0;
 		ELSIF (rising_edge(CLK)) THEN
-			IF(CHAR_ROW >= 8) THEN		--When one char is completely loaded, moves to the first row of the next one
+			IF(CHAR_ROW >= 9) THEN		--When one char is completely loaded, moves to the first row of the next one
 				CHAR_ROW <= 0;
 			ELSE
 				CHAR_ROW <= CHAR_ROW + 1;
@@ -66,7 +66,7 @@ BEGIN
 	BEGIN
 		IF(rising_edge(CLK)) THEN
 			IF(R_ENABLE = '1') THEN
-				var_buffer(V_CHAR_POS, H_CHAR_POS)(CHAR_ROW) <= DATA;
+				var_buffer(V_CHAR_POS, H_CHAR_POS)(CHAR_ROW) <= DATA & '0';
 			END IF;
 		END IF;
 	END PROCESS;
@@ -78,16 +78,13 @@ BEGIN
 			V_PIXEL_POS <= 0;
 		ELSIF(rising_edge(CLK)) THEN
 			IF(R_ENABLE = '0') THEN
-				IF(H_BUFFER_SYNC = '1') THEN
-					H_PIXEL_POS <= 0;
-					IF(V_PIXEL_POS < 468) THEN
-						V_PIXEL_POS <= V_PIXEL_POS + 1;
-					END IF;
-				END IF;
 				IF(V_BUFFER_SYNC = '1') THEN
 					V_PIXEL_POS <= 0;
-				END IF;
-				IF(H_PIXEL_POS < 791) THEN
+					H_PIXEL_POS <= 0;
+				ELSIF(H_BUFFER_SYNC = '1') THEN
+					V_PIXEL_POS <= V_PIXEL_POS + 1;
+					H_PIXEL_POS <= 0;
+				ELSE
 					H_PIXEL_POS <= H_PIXEL_POS + 1;
 				END IF;
 			END IF;
@@ -107,13 +104,13 @@ BEGIN
 			V_CHAR_PIXEL := 0;
 		ELSIF(rising_edge(CLK)) THEN
 			IF(R_ENABLE = '0') THEN
-				IF(H_PIXEL_POS = 791 OR V_PIXEL_POS = 468) THEN
+				IF(H_PIXEL_POS > 799 OR V_PIXEL_POS > 479) THEN
 					OUTPUT_PIXEL <= '0';
 				ELSE
-					H_BUFFER_CHAR := H_PIXEL_POS / 7;
-					H_CHAR_PIXEL := H_PIXEL_POS - (H_BUFFER_CHAR * 7);
-					V_BUFFER_CHAR := V_PIXEL_POS / 9;
-					V_CHAR_PIXEL := V_PIXEL_POS - (V_BUFFER_CHAR * 9);
+					H_BUFFER_CHAR := H_PIXEL_POS / 32;
+					H_CHAR_PIXEL := (H_PIXEL_POS - (H_BUFFER_CHAR * 32)) / 4;
+					V_BUFFER_CHAR := V_PIXEL_POS / 40;
+					V_CHAR_PIXEL := (V_PIXEL_POS - (V_BUFFER_CHAR * 40)) / 4;
 					OUTPUT_PIXEL <= var_buffer(V_BUFFER_CHAR, H_BUFFER_CHAR)(V_CHAR_PIXEL)(H_CHAR_PIXEL);
 				END IF;
 			ELSE

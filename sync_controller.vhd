@@ -102,7 +102,7 @@ BEGIN
 	IF(RST = '1') THEN
 		BLANK <= '1';
 	ELSIF(rising_edge(CLK)) THEN
-		IF((H_POS > HD + 1) OR (H_POS < 1) OR (V_POS > VD + 1) OR (V_POS < 1)) THEN
+		IF((H_POS > HD + 1) OR (V_POS > VD + 1)) THEN
 			BLANK <= '0';
 		ELSE
 			BLANK <= '1';
