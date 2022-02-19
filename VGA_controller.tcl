@@ -15,7 +15,7 @@
 
 # Quartus Prime: Generate Tcl File for Project
 # File: VGA_controller.tcl
-# Generated on: Wed Jan 19 00:43:02 2022
+# Generated on: Sat Feb 19 00:58:32 2022
 
 # Load Quartus Prime Tcl Project package
 package require ::quartus::project
@@ -53,26 +53,25 @@ if {$make_assignments} {
 	set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (VHDL)"
 	set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
 	set_global_assignment -name EDA_OUTPUT_DATA_FORMAT VHDL -section_id eda_simulation
-	set_global_assignment -name PROJECT_IP_REGENERATION_POLICY ALWAYS_REGENERATE_IP
 	set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 	set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+	set_global_assignment -name PROJECT_IP_REGENERATION_POLICY ALWAYS_REGENERATE_IP
 	set_global_assignment -name VHDL_INPUT_VERSION VHDL_2008
 	set_global_assignment -name VHDL_SHOW_LMF_MAPPING_MESSAGES OFF
 	set_global_assignment -name TIMEQUEST_MULTICORNER_ANALYSIS ON
 	set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
-	set_global_assignment -name SOURCE_FILE PLL.cmp
-	set_global_assignment -name SDC_FILE VGA_controller.sdc
-	set_global_assignment -name VHDL_FILE video_controller.vhd
-	set_global_assignment -name VHDL_FILE sync_controller.vhd
-	set_global_assignment -name VHDL_FILE PLL.vhd -library PLL
-	set_global_assignment -name VHDL_FILE char_library.vhd
-	set_global_assignment -name VHDL_FILE char_buffer.vhd
-	set_global_assignment -name QIP_FILE PLL.qip
-	set_global_assignment -name SIP_FILE PLL.sip
-	set_global_assignment -name VHDL_FILE VGA_controller.vhd
 	set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 	set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 	set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+	set_global_assignment -name VHDL_FILE VGA_controller.vhd
+	set_global_assignment -name VHDL_FILE char_library.vhd
+	set_global_assignment -name VHDL_FILE sync_controller.vhd
+	set_global_assignment -name SOURCE_FILE PLL.cmp
+	set_global_assignment -name SDC_FILE VGA_controller.sdc
+	set_global_assignment -name VHDL_FILE video_controller.vhd
+	set_global_assignment -name VHDL_FILE PLL.vhd -library PLL
+	set_global_assignment -name QIP_FILE PLL.qip
+	set_global_assignment -name SIP_FILE PLL.sip
 	set_location_assignment PIN_AF14 -to I_CLK
 	set_location_assignment PIN_A11 -to O_CLK
 	set_location_assignment PIN_AA14 -to I_RST
@@ -106,16 +105,6 @@ if {$make_assignments} {
 	set_location_assignment PIN_F13 -to O_RED[7]
 	set_location_assignment PIN_W15 -to I_INPUT[1]
 	set_location_assignment PIN_AA15 -to I_INPUT[0]
-	set_location_assignment PIN_AC12 -to I_INPUT[3]
-	set_location_assignment PIN_AF9 -to I_INPUT[4]
-	set_location_assignment PIN_AF10 -to I_INPUT[5]
-	set_location_assignment PIN_AD11 -to I_INPUT[6]
-	set_location_assignment PIN_AD12 -to I_INPUT[7]
-	set_location_assignment PIN_AE11 -to I_INPUT[8]
-	set_location_assignment PIN_AC9 -to I_INPUT[9]
-	set_location_assignment PIN_AD10 -to I_INPUT[10]
-	set_location_assignment PIN_AE12 -to I_INPUT[11]
-	set_location_assignment PIN_AB12 -to I_INPUT[2]
 	set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
 
 	# Commit assignments

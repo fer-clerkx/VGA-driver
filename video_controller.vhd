@@ -5,158 +5,109 @@ USE IEEE.NUMERIC_STD.ALL;
 ENTITY video_controller IS
 	PORT(clk     : IN STD_LOGIC;
 	     rst     : IN STD_LOGIC;
-		  input   : IN STD_LOGIC_VECTOR(45 DOWNTO 0);
-		  sel     : OUT INTEGER RANGE 0 TO 36;
-		  enable  : OUT STD_LOGIC;
-		  lib_rst : OUT STD_LOGIC;
-		  buf_rst : OUT STD_LOGIC
+		  mode	 : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
+		  a		 : IN INTEGER RANGE 0 TO 127;
+		  b		 : IN INTEGER RANGE 0 TO 127;
+		  c		 : IN STD_LOGIC_VECTOR(11 DOWNTO 0);
+		  oper	 : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
+		  answer0 : IN INTEGER RANGE 0 TO 7;
+		  answer1 : IN INTEGER RANGE 0 TO 7;
+		  reward0 : IN INTEGER RANGE 0 TO 7;
+		  reward1 : IN INTEGER RANGE 0 TO 7;
+		  h_sync  : IN STD_LOGIC;
+		  v_sync  : IN STD_LOGIC;
+		  sel     : OUT INTEGER RANGE 0 TO 36
 	);
 END video_controller;
 
 ARCHITECTURE behaviour OF video_controller IS
 	TYPE matrix IS ARRAY(11 DOWNTO 0, 24 DOWNTO 0) OF INTEGER RANGE 0 TO 36;
-	TYPE t_number IS ARRAY(2 DOWNTO 0) OF INTEGER RANGE 0 TO 9;
-	TYPE t_counter IS ARRAY (1 DOWNTO 0) OF INTEGER RANGE 0 TO 9;
+	TYPE t_number IS ARRAY(2 DOWNTO 0) OF INTEGER RANGE 0 TO 36;
 	
 	SIGNAL picture : matrix := (OTHERS => (OTHERS => 36));
-	SIGNAL hor : INTEGER RANGE 0 TO 24 := 0;
-	SIGNAL ver : INTEGER RANGE 0 TO 11 := 0;
-	SIGNAL count: INTEGER RANGE 0 TO 9 := 0;
-	SIGNAL state : INTEGER RANGE 0 TO 3 := 0;
-	SIGNAL w_rst : STD_LOGIC := '0';
 BEGIN
-	mode:PROCESS(clk, rst)
-		VARIABLE last_input : STD_LOGIC_VECTOR(45 DOWNTO 0) := (OTHERS => '0');
-		VARIABLE a : INTEGER RANGE 0 TO 127;
-		VARIABLE b : INTEGER RANGE 0 TO 127;
+	render:PROCESS(clk, rst)
+		VARIABLE v_a : INTEGER RANGE 0 TO 127;
+		VARIABLE v_b : INTEGER RANGE 0 TO 127;
 		VARIABLE number_a : t_number;
 		VARIABLE number_b : t_number;
 		VARIABLE number_c : t_number;
-		VARIABLE oper : INTEGER RANGE 31 to 34;
-		VARIABLE answer : t_counter;
-		VARIABLE rewards : t_counter;
+		VARIABLE v_oper : INTEGER RANGE 31 to 34;
 	BEGIN
-		IF(rst = '1') THEN
-			last_input := (OTHERS => '0');
-		ELSIF(rising_edge(clk)) THEN
-			IF(input /= last_input) THEN
-				last_input := input;
-				w_rst <= '1';
-				a := to_integer(unsigned(input(8 DOWNTO 2)));
-				number_a(0) := a mod 10;
-				a := a / 10;
-				number_a(1) := a mod 10;
-				number_a(2) := a / 10;
-				b := to_integer(unsigned(input(15 DOWNTO 9)));
-				number_b(0) := b mod 10;
-				b := b / 10;
-				number_b(1) := b mod 10;
-				number_b(2) := b / 10;
-				number_c(0) := to_integer(unsigned(input(19 DOWNTO 16)));
-				number_c(1) := to_integer(unsigned(input(23 DOWNTO 20)));
-				number_c(2) := to_integer(unsigned(input(27 DOWNTO 24)));
-				CASE input(29 DOWNTO 28) IS
-					WHEN "00" => oper := 32;
-					WHEN "01" => oper := 31;
-					WHEN "10" => oper := 33;
-					WHEN "11" => oper := 34;
-					WHEN OTHERS => NULL;
-				END CASE;
-				answer(0) := to_integer(unsigned(input(33 DOWNTO 30)));
-				answer(1) := to_integer(unsigned(input(37 DOWNTO 34)));
-				rewards(0) := to_integer(unsigned(input(41 DOWNTO 38)));
-				rewards(1) := to_integer(unsigned(input(45 DOWNTO 42)));
-				CASE input(1 DOWNTO 0) IS
-					WHEN "00" => picture <= (5 => (7 => 17, 8 => 19, 9 => 11, 10 => 20, 11 => 21, 12 => 21, 
-													13 => 13, 14 => 11, 15 => 23, 16 => 35, OTHERS => 36),
-													OTHERS => (OTHERS => 36));
-					WHEN "01" => picture <= (5 => (9 => 11, 10 => 20, 11 => 21, 12 => 21, 13 => 13, 14 => 11,
-															 15 => 23, 16 => 35, OTHERS => 36),
-													OTHERS => (OTHERS => 36));
-					WHEN "10" => picture <= (0 => (4 => 10, 5 => 19, 6 => 22, 7 => 25, 8 => 13, 9 => 21, 10 => 22,
-															 14 => 21, 15 => 13, 16 => 25, 17 => 10, 18 => 21, 19 => 12, 20 => 22,
-															 OTHERS => 36),
-													 1 => (6 => answer(0), 7 => 34, 8 => answer(1), 16 => rewards(0), 17 => 34, 
-															 18 => rewards(1), OTHERS => 36),
-													 5 => (7 => number_a(2), 8 => number_a(1), 9 => number_a(0), 10 => oper, 
-													 11 => number_b(2), 12 => number_b(1), 13 => number_b(0), 14 => 30, 
-													 15 => number_c(2), 16 => number_c(1), 17 => number_c(0), OTHERS => 36),
-													 OTHERS => (OTHERS => 36));
-													
-					WHEN OTHERS => picture <= (OTHERS => (OTHERS => 36));
-				END CASE;
-			ELSE
-				w_rst <= '0';
+		IF(rising_edge(clk)) THEN
+			v_a := a;
+			number_a(0) := v_a mod 10;
+			v_a := v_a / 10;
+			number_a(1) := v_a mod 10;
+			number_a(2) := v_a / 10;
+			
+			v_b := b;
+			number_b(0) := v_b mod 10;
+			v_b := v_b / 10;
+			number_b(1) := v_b mod 10;
+			number_b(2) := v_b / 10;
+			
+			number_c(0) := to_integer(unsigned(c(3 DOWNTO 0)));
+			IF(number_c(0) = 10) THEN
+				number_c(0) := 36;
 			END IF;
-		END IF;
-	END PROCESS;
-
-	controller:PROCESS(clk, rst, w_rst)
-	BEGIN
-		IF(rst = '1') THEN
-			state <= 0;
-		ELSIF(rising_edge(clk)) THEN
-			IF(w_rst = '1') THEN
-				state <= 0;
-			ELSE
-				CASE state IS
-					WHEN 0 => enable <= '0';
-								 lib_rst <= '1';
-								 buf_rst <= '1';
-								 state <= 1;
-					WHEN 1 => enable <= '0';
-								 lib_rst <= '0';
-								 buf_rst <= '1';
-								 state <= 2;
-					WHEN 2 => enable <= '1';
-								 lib_rst <= '0';
-								 buf_rst <= '0';
-								 IF(count = 8 AND hor = 24 AND ver = 11) THEN
-									state <= 3;
-								 END IF;
-					WHEN OTHERS =>  enable <= '0';
-										 lib_rst <= '0';
-										 buf_rst <= '0';
-				END CASE;
+			number_c(1) := to_integer(unsigned(c(7 DOWNTO 4)));
+			IF(number_c(1) = 10) THEN
+				number_c(1) := 36;
 			END IF;
+			number_c(2) := to_integer(unsigned(c(11 DOWNTO 8)));
+			IF(number_c(2) = 10) THEN
+				number_c(2) := 36;
+			END IF;
+			
+			CASE oper IS
+				WHEN "00" => v_oper := 32;
+				WHEN "01" => v_oper := 31;
+				WHEN "10" => v_oper := 33;
+				WHEN "11" => v_oper := 34;
+				WHEN OTHERS => NULL;
+			END CASE;
+			
+			CASE mode IS
+				WHEN "00" => picture <= (5 => (7 => 17, 8 => 19, 9 => 11, 10 => 20, 11 => 21, 12 => 21, 
+												13 => 13, 14 => 11, 15 => 23, 16 => 35, OTHERS => 36),
+												OTHERS => (OTHERS => 36));
+				WHEN "01" => picture <= (5 => (9 => 11, 10 => 20, 11 => 21, 12 => 21, 13 => 13, 14 => 11,
+														 15 => 23, 16 => 35, OTHERS => 36),
+												OTHERS => (OTHERS => 36));
+				WHEN "10" => picture <= (0 => (4 => 10, 5 => 19, 6 => 22, 7 => 25, 8 => 13, 9 => 21, 10 => 22,
+														 14 => 21, 15 => 13, 16 => 25, 17 => 10, 18 => 21, 19 => 12, 20 => 22,
+														 OTHERS => 36),
+												 1 => (6 => answer0, 7 => 34, 8 => answer1, 16 => reward0, 17 => 34, 
+														 18 => reward1, OTHERS => 36),
+												 5 => (7 => number_a(0), 8 => number_a(1), 9 => number_a(2), 10 => v_oper, 
+												 11 => number_b(0), 12 => number_b(1), 13 => number_b(2), 14 => 30, 
+												 15 => number_c(0), 16 => number_c(1), 17 => number_c(2), OTHERS => 36),
+												 OTHERS => (OTHERS => 36));
+												
+				WHEN OTHERS => picture <= (OTHERS => (OTHERS => 36));
+			END CASE;
 		END IF;
 	END PROCESS;
 	
-	output:PROCESS(clk, rst, w_rst)
+	output:PROCESS(clk, rst)
+		VARIABLE h_pix : INTEGER RANGE 0 TO 799 := 0;
+		VARIABLE v_pix : INTEGER RANGE 0 TO 479 := 0;
 	BEGIN
 		IF(rst = '1') THEN
-			count <= 0;
-			hor <= 0;
-			ver <= 0;
+			h_pix := 0;
+			v_pix := 0;
 		ELSIF(rising_edge(clk)) THEN
-			IF(w_rst = '1') THEN
-				count <= 0;
-				hor <= 0;
-				ver <= 0;
-			ELSE
-				sel <= picture(ver, hor);
-				IF(state = 1 OR state = 2) THEN
-					IF(count < 9) THEN
-						count <= count + 1;
-					ELSE
-						count <= 0;
-						IF(hor < 24) THEN
-							hor <= hor + 1;
-						ELSE
-							hor <= 0;
-							IF(ver < 11) THEN
-								ver <= ver + 1;
-							ELSE
-								ver <= 0;
-							END IF;
-						END IF;
-					END IF;
-				ELSE
-					count <= 0;
-					hor <= 0;
-					ver <= 0;
-				END IF;
+			sel <= picture(v_pix / 40, h_pix / 32);
+			IF(v_sync = '1') THEN
+				h_pix := 0;
+				v_pix := 0;
+			ELSIF(h_sync = '1' AND v_pix < 479) THEN
+				h_pix := 0;
+				v_pix := v_pix + 1;
+			ELSIF(h_pix < 799) THEN
+				h_pix := h_pix + 1;
 			END IF;
 		END IF;
 	END PROCESS;
-end behaviour;
+END behaviour;
