@@ -2,66 +2,26 @@ LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
 LIBRARY WORK;
+LIBRARY pll;
 
 ENTITY VGA_controller IS
 	PORT(
-		I_CLK, I_RST : IN STD_LOGIC;
-		I_INPUT : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
-		O_BLANK : OUT STD_LOGIC;
-		O_H, O_V : OUT STD_LOGIC;
-		O_CLK, O_LOCKED : OUT STD_LOGIC;
-		O_RED, O_GREEN, O_BLUE : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+		I_CLK		: IN	STD_LOGIC;
+		I_RST		: IN	STD_LOGIC;
+		I_INPUT	: IN	STD_LOGIC_VECTOR(1 DOWNTO 0);
+		O_BLANK	: OUT	STD_LOGIC;
+		O_H		: OUT	STD_LOGIC;
+		O_V		: OUT	STD_LOGIC;
+		O_CLK		: OUT	STD_LOGIC;
+		O_LOCKED	: OUT	STD_LOGIC;
+		O_RED		: OUT	STD_LOGIC_VECTOR(7 DOWNTO 0);
+		O_GREEN	: OUT	STD_LOGIC_VECTOR(7 DOWNTO 0);
+		O_BLUE	: OUT	STD_LOGIC_VECTOR(7 DOWNTO 0)
 	);
 END VGA_controller;
 
-ARCHITECTURE behaviour OF VGA_controller IS
-	COMPONENT sync_controller
-		PORT(CLK			   : in STD_LOGIC;
-			  RST			   : in STD_LOGIC;
-			  H_SYNC		   : out STD_LOGIC;
-			  V_SYNC		   : out STD_LOGIC;
-			  H_BUF_SYNC	: out STD_LOGIC;
-			  V_BUF_SYNC	: out STD_LOGIC;
-			  BLANK			: out STD_LOGIC
-		);
-	END COMPONENT;
-	
-	COMPONENT PLL
-		PORT(refclk : IN STD_LOGIC;
-			  rst : IN STD_LOGIC;
-			  outclk_0 : OUT STD_LOGIC;
-			  locked : OUT STD_LOGIC
-		);
-	END COMPONENT;
-	
-	COMPONENT char_library
-		PORT(CLK  : IN STD_LOGIC;
-		     RST  : IN STD_LOGIC;
-			  SEL  : IN INTEGER RANGE 0 TO 36;
-			  H_LIB_SYNC : IN STD_LOGIC;
-			  V_LIB_SYNC : IN STD_LOGIC;
-			  PIX : OUT STD_LOGIC
-		);
-	END COMPONENT;
-	
-	COMPONENT video_controller
-		PORT(clk     : IN STD_LOGIC;
-		     rst     : IN STD_LOGIC;
-			  mode	 : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
-			  a		 : IN INTEGER RANGE 0 TO 127;
-			  b		 : IN INTEGER RANGE 0 TO 127;
-			  c		 : IN STD_LOGIC_VECTOR(11 DOWNTO 0);
-			  oper	 : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
-			  answer0 : IN INTEGER RANGE 0 TO 7;
-			  answer1 : IN INTEGER RANGE 0 TO 7;
-			  reward0 : IN INTEGER RANGE 0 TO 7;
-			  reward1 : IN INTEGER RANGE 0 TO 7;
-			  h_sync  : IN STD_LOGIC;
-			  v_sync  : IN STD_LOGIC;
-			  sel     : OUT INTEGER RANGE 0 TO 36
-		);
-	END COMPONENT;
-	
+ARCHITECTURE RTL OF VGA_controller IS
+
 	SIGNAL w_h_sync : STD_LOGIC;
 	SIGNAL w_v_sync : STD_LOGIC;
 	SIGNAL h_lib_sync : STD_LOGIC := '0';
@@ -86,42 +46,51 @@ BEGIN
 		END IF;
 	END PROCESS;
 				
-	sync : sync_controller
-	PORT MAP(CLK => w_clk,
-				RST => w_rst,
-				H_SYNC => O_H,
-				V_SYNC => O_V,
-				H_BUF_SYNC => w_h_sync,
-				V_BUF_SYNC => w_v_sync,
-				BLANK => O_BLANK);
+	inst_sync : entity work.sync_controller(RTL)
+		PORT MAP(
+			I_CLK => w_clk,
+			I_RST => w_rst,
+			O_H_SYNC => O_H,
+			O_V_SYNC => O_V,
+			O_H_BUF_SYNC => w_h_sync,
+			O_V_BUF_SYNC => w_v_sync,
+			O_BLANK => O_BLANK
+		);
 				
-	manip: PLL
-	PORT MAP(refclk => I_CLK,
-		      rst => w_rst,
-		      outclk_0 => w_clk,
-		      locked => O_LOCKED);
+	inst_PLL: entity pll.PLL(rtl)
+		PORT MAP(
+			refclk => I_CLK,
+			rst => w_rst,
+			outclk_0 => w_clk,
+			locked => O_LOCKED
+		);
 		 
-	lib : char_library
-	PORT MAP(CLK => w_clk,
-	         RST => w_rst,
-				SEL => w_sel,
-				H_LIB_SYNC => h_lib_sync,
-				V_LIB_SYNC => v_lib_sync,
-				PIX => w_pix);
+	inst_lib : entity work.char_library(RTL)
+		PORT MAP(
+			I_CLK => w_clk,
+			I_RST => w_rst,
+			I_SEL => w_sel,
+			I_H_LIB_SYNC => h_lib_sync,
+			I_V_LIB_SYNC => v_lib_sync,
+			O_PIX => w_pix
+		);
 				
-	video : video_controller
-	PORT MAP(clk => w_clk,
-	         rst => w_rst,
-				mode => I_INPUT,		--mode
-				a => 0,	--a
-				b => 127,		--b
-				c => "011110010010",
-				oper => "01",			--oper
-				answer0 => 5,		--answer0
-				answer1 => 3,		--answer1
-				reward0 => 6,		--reward0
-				reward1 => 0,		--reward1
-				sel => w_sel,
-				h_sync => w_h_sync,
-				v_sync => w_v_sync);
-END behaviour;
+	inst_video : entity work.video_controller(RTL)
+		PORT MAP(
+			I_clk => w_clk,
+			I_rst => w_rst,
+			I_mode => I_INPUT,		--mode
+			I_a => 0,	--a
+			I_b => 127,		--b
+			I_c => "011110010010",
+			I_oper => "01",			--oper
+			I_answer0 => 5,		--answer0
+			I_answer1 => 3,		--answer1
+			I_reward0 => 6,		--reward0
+			I_reward1 => 0,		--reward1
+			O_sel => w_sel,
+			I_h_sync => w_h_sync,
+			I_v_sync => w_v_sync
+		);
+		
+END ARCHITECTURE RTL;

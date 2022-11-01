@@ -22,9 +22,9 @@ VL^M;d4OLA^9QjJQg:UAgP1
 !s100 kW^CTR^Ud9WUAG^[l>kK=2
 Z7 OV;C;10.5b;63
 32
-Z8 !s110 1667260310
+Z8 !s110 1667294754
 !i10b 1
-Z9 !s108 1667260310.000000
+Z9 !s108 1667294754.000000
 Z10 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/char_library.vhd|
 Z11 !s107 C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/char_library.vhd|
 !i113 1
@@ -75,11 +75,11 @@ Artl
 R2
 R3
 R15
-Z20 DEx4 work 3 pll 0 22 hMX@6jgh]3@Z1zj?z5W@g1
+DEx4 work 3 pll 0 22 hMX@6jgh]3@Z1zj?z5W@g1
 l51
 L44
-Z21 V0A59:mRPAT[2@CEIN0]?a3
-Z22 !s100 Cj8cz?TLD`MzQaM4;j>]n3
+V0A59:mRPAT[2@CEIN0]?a3
+!s100 Cj8cz?TLD`MzQaM4;j>]n3
 R7
 32
 R8
@@ -91,24 +91,24 @@ R19
 R12
 R13
 Esync_controller
-Z23 w1642583748
+Z20 w1642583748
 R1
 R2
 R3
 R4
-Z24 8C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/sync_controller.vhd
-Z25 FC:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/sync_controller.vhd
+Z21 8C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/sync_controller.vhd
+Z22 FC:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/sync_controller.vhd
 l0
 L5
 V0WUcC3l?NW0e4GXT]L^`J2
 !s100 ]j^Hj4?O88fN:5TD;j1@I2
 R7
 32
-Z26 !s110 1667260309
+Z23 !s110 1667294753
 !i10b 1
-Z27 !s108 1667260309.000000
-Z28 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/sync_controller.vhd|
-Z29 !s107 C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/sync_controller.vhd|
+Z24 !s108 1667294753.000000
+Z25 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/sync_controller.vhd|
+Z26 !s107 C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/sync_controller.vhd|
 !i113 1
 R12
 R13
@@ -123,33 +123,33 @@ VnOAbD^PmMB]`:Ldece1Vj2
 !s100 P2ZFdh0SERQo3::kMkD]m2
 R7
 32
-R26
+R23
 !i10b 1
-R27
-R28
-R29
+R24
+R25
+R26
 !i113 1
 R12
 R13
 Evga_controller
-Z30 w1645228464
+Z27 w1645228464
 R1
 R2
 R3
 R4
-Z31 8C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/VGA_controller.vhd
-Z32 FC:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/VGA_controller.vhd
+Z28 8C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/VGA_controller.vhd
+Z29 FC:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/VGA_controller.vhd
 l0
 L6
 V=CG1W^B2aMIeR8KhH9kjL2
 !s100 [U?ILjIf8zUDGef^o7^0K0
 R7
 32
-R26
+R23
 !i10b 1
-R27
-Z33 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/VGA_controller.vhd|
-Z34 !s107 C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/VGA_controller.vhd|
+R24
+Z30 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/VGA_controller.vhd|
+Z31 !s107 C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/VGA_controller.vhd|
 !i113 1
 R12
 R13
@@ -164,22 +164,63 @@ VCc<60zlU@;7_JLKfz`?A<0
 !s100 P0GNUJf31gj:I^@DflU<z2
 R7
 32
-R26
+R23
 !i10b 1
-R27
+R24
+R30
+R31
+!i113 1
+R12
+R13
+Evga_framebuffer
+Z32 w1667294510
+Z33 DPx9 altera_mf 20 altera_mf_components 0 22 :YRc5<ojH^WgP]^Vezi9c1
+R2
+R3
+R4
+Z34 8C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/IP/VGA_framebuffer/VGA_framebuffer.vhd
+Z35 FC:/Users/fercl/Documents/School/Cookie jar/VGA-driver/IP/VGA_framebuffer/VGA_framebuffer.vhd
+l0
+L43
+ViQZHV8o[b3i`5XAle;[ZP1
+!s100 ^BLQWDFJainXN403T_fJz3
+R7
+32
+R8
+!i10b 1
+R9
+Z36 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/IP/VGA_framebuffer/VGA_framebuffer.vhd|
+Z37 !s107 C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/IP/VGA_framebuffer/VGA_framebuffer.vhd|
+!i113 1
+R12
+R13
+Asyn
 R33
-R34
+R2
+R3
+DEx4 work 15 vga_framebuffer 0 22 iQZHV8o[b3i`5XAle;[ZP1
+l61
+L57
+Vh=`eTgBA_>05nTLC>^jgS3
+!s100 U2CCNK`Y3OAz6k:A^P]jP2
+R7
+32
+R8
+!i10b 1
+R9
+R36
+R37
 !i113 1
 R12
 R13
 Evideo_controller
-Z35 w1645227021
+Z38 w1645227021
 R1
 R2
 R3
 R4
-Z36 8C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/video_controller.vhd
-Z37 FC:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/video_controller.vhd
+Z39 8C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/video_controller.vhd
+Z40 FC:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/video_controller.vhd
 l0
 L5
 Vm12B`;I<6^<Z`JEO@Y]O?3
@@ -189,8 +230,8 @@ R7
 R8
 !i10b 1
 R9
-Z38 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/video_controller.vhd|
-Z39 !s107 C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/video_controller.vhd|
+Z41 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/video_controller.vhd|
+Z42 !s107 C:/Users/fercl/Documents/School/Cookie jar/VGA-driver/HDL/video_controller.vhd|
 !i113 1
 R12
 R13
@@ -208,8 +249,8 @@ R7
 R8
 !i10b 1
 R9
-R38
-R39
+R41
+R42
 !i113 1
 R12
 R13

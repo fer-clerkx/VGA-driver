@@ -4,19 +4,20 @@ USE IEEE.NUMERIC_STD.ALL;
 
 ENTITY char_library IS
 	PORT (
-			CLK, RST	:	IN		STD_LOGIC;
-			SEL		:	IN		INTEGER RANGE 0 TO 36;
-			H_LIB_SYNC : IN STD_LOGIC;
-			V_LIB_SYNC : IN STD_LOGIC;
-			PIX		:	OUT	STD_LOGIC
+			I_CLK				: IN	STD_LOGIC;
+			I_RST				: IN	STD_LOGIC;
+			I_SEL				: IN	INTEGER RANGE 0 TO 36;
+			I_H_LIB_SYNC	: IN	STD_LOGIC;
+			I_V_LIB_SYNC	: IN	STD_LOGIC;
+			O_PIX				: OUT	STD_LOGIC
 		);
-END char_library;
+END ENTITY char_library;
 
-ARCHITECTURE behaviour OF char_library IS
-	TYPE char IS ARRAY(9 DOWNTO 0) OF STD_LOGIC_VECTOR(0 TO 7);
-	TYPE char_array IS ARRAY(36 DOWNTO 0) OF char;
+ARCHITECTURE RTL OF char_library IS
+	TYPE t_char IS ARRAY(9 DOWNTO 0) OF STD_LOGIC_VECTOR(0 TO 7);
+	TYPE t_char_array IS ARRAY(36 DOWNTO 0) OF t_char;
 	
-	CONSTANT lib : char_array :=  (
+	CONSTANT C_LIB : t_char_array :=  (
 					       0 =>(0 => "00000000",		--char = '0'
 									1 => "00111000",
 									2 => "01001100",
@@ -425,29 +426,29 @@ ARCHITECTURE behaviour OF char_library IS
 									9 => "00000000")
 								);
 BEGIN
-	output:PROCESS(CLK, RST)
-		VARIABLE h_pix : INTEGER := 0;
-		VARIABLE v_pix : INTEGER := 0;
+	output:PROCESS(I_CLK, I_RST)
+		VARIABLE h_O_PIX : INTEGER := 0;
+		VARIABLE v_O_PIX : INTEGER := 0;
 	BEGIN
-		IF(RST = '1') THEN
-			h_pix := 0;
-			v_pix := 0;
-		ELSIF(rising_edge(CLK)) THEN
-			PIX <= lib(SEL)(v_pix / 4)(h_pix / 4);
-			IF(V_LIB_SYNC = '1') THEN
-				h_pix := 0;
-				v_pix := 0;
-			ELSIF(H_LIB_SYNC = '1') THEN
-				h_pix := 0;
-				IF(v_pix < 39) THEN
-					v_pix := v_pix + 1;
+		IF(I_RST = '1') THEN
+			h_O_PIX := 0;
+			v_O_PIX := 0;
+		ELSIF(rising_edge(I_CLK)) THEN
+			O_PIX <= C_LIB(I_SEL)(v_O_PIX / 4)(h_O_PIX / 4);
+			IF(I_V_LIB_SYNC = '1') THEN
+				h_O_PIX := 0;
+				v_O_PIX := 0;
+			ELSIF(I_H_LIB_SYNC = '1') THEN
+				h_O_PIX := 0;
+				IF(v_O_PIX < 39) THEN
+					v_O_PIX := v_O_PIX + 1;
 				ELSE
-					v_pix := 0;
+					v_O_PIX := 0;
 				END IF;
-			ELSIF(h_pix < 31) THEN
-				h_pix := h_pix + 1;
+			ELSIF(h_O_PIX < 31) THEN
+				h_O_PIX := h_O_PIX + 1;
 			ELSE
-				h_pix := 0;
+				h_O_PIX := 0;
 			END IF;
 		END IF;
 	END PROCESS;

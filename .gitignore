@@ -24,3 +24,6 @@
 !/simulation/work/_info
 /simulation/*mti
 /simulation/*.wlf
+
+#Ignore backup files
+/HDL/*.bak
