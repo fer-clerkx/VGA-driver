@@ -1,96 +1,96 @@
-LIBRARY IEEE;
-USE IEEE.STD_LOGIC_1164.ALL;
-USE IEEE.NUMERIC_STD.ALL;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
-ENTITY sync_controller is
-	PORT (
-		I_CLK				: in	STD_LOGIC;
-		I_RST				: in	STD_LOGIC;
-		O_H_SYNC			: out	STD_LOGIC;
-		O_V_SYNC			: out	STD_LOGIC;
-		O_H_BUF_SYNC	: out	STD_LOGIC;
-		O_V_BUF_SYNC	: out	STD_LOGIC;
-		O_BLANK			: out	STD_LOGIC
+entity sync_controller is
+	port (
+		i_clk			: in	std_logic;
+		i_rst			: in	std_logic;
+		o_h_sync		: out	std_logic;
+		o_v_sync		: out	std_logic;
+		o_h_buf_sync	: out	std_logic;
+		o_v_buf_sync	: out	std_logic;
+		o_blank			: out	std_logic
 	);
-END ENTITY sync_controller;
+end entity sync_controller;
 
-ARCHITECTURE RTL OF sync_controller IS
+architecture RTL of sync_controller is
 
-	constant C_HD	:	integer	:=	799;	--Horizontal definition
-	constant C_HFP	:	integer	:=	24;	--Horizontal front porch
-	constant C_HSP	:	integer	:=	72;	--Horizontal sync pulse
-	constant C_HBP	:	integer	:=	100;	--ho rizontal back porch
+	constant C_HD	: integer := 799;	--Horizontal definition
+	constant C_HFP	: integer := 24;	--Horizontal front porch
+	constant C_HSP	: integer := 72;	--Horizontal sync pulse
+	constant C_HBP	: integer := 100;	--Horizontal back porch
 	
-	constant C_VD	:	integer	:=	479;	--Vertical definition
-	constant C_VFP	:	integer	:=	1;		--Vertical front porch
-	constant C_VSP	:	integer	:=	7;		--Vertical sync pulse
-	constant C_VBP	:	integer	:=	30;	--Vertical back porch
+	constant C_VD	: integer := 479;	--Vertical definition
+	constant C_VFP	: integer := 1;		--Vertical front porch
+	constant C_VSP	: integer := 7;		--Vertical sync pulse
+	constant C_VBP	: integer := 30;	--Vertical back porch
 	
-	signal H_POS	: integer := 0;	--horizontal position
-	signal V_POS	: integer := 0;	--vertical position	
-
+	signal r_H_Pos	: integer := 0;	--horizontal position
+	signal r_V_Pos	: integer := 0;	--vertical position	
 	
-BEGIN
+begin
 
-position:PROCESS(I_CLK, I_RST)
-BEGIN
-	IF(I_RST = '1') THEN
-		H_POS <= 0;
-		V_POS <= 0;
-	ELSIF(rising_edge(I_CLK)) THEN
-		IF(H_POS < C_HD + C_HFP + C_HSP + C_HBP) THEN
-			H_POS <= H_POS + 1;
-		ELSE
-			H_POS <= 0;
-			IF(V_POS < C_VD + C_VFP + C_VSP + C_VBP) THEN
-				V_POS <= V_POS + 1;
-			ELSE
-				V_POS <= 0;
-			END IF;
-		END IF;
-	END IF;
-END PROCESS;
+	POSITION : process(i_clk, i_rst)
+	begin
+		if i_rst = '1' then
+			r_H_Pos <= 0;
+			r_V_Pos <= 0;
+		elsif rising_edge(i_clk)  then
+			if r_H_Pos < C_HD + C_HFP + C_HSP + C_HBP then
+				r_H_Pos <= r_H_Pos + 1;
+			else
+				r_H_Pos <= 0;
+				if r_V_Pos < C_VD + C_VFP + C_VSP + C_VBP then
+					r_V_Pos <= r_V_Pos + 1;
+				else
+					r_V_Pos <= 0;
+				end if;
+			end if;
+		end if;
+	end process;
 
-diplay_syncs:PROCESS(I_CLK)
-BEGIN
-	IF(rising_edge(I_CLK)) THEN
-		IF(H_POS > C_HD + C_HFP AND H_POS <= C_HD + C_HFP + C_HSP) THEN
-			O_H_SYNC <= '0';
-		ELSE
-			O_H_SYNC <= '1';
-		END IF;
-		IF(V_POS > C_VD + C_VFP AND V_POS <= C_VD + C_VFP + C_VSP) THEN
-			O_V_SYNC <= '0';
-		ELSE
-			O_V_SYNC <= '1';
-		END IF;
-	END IF;
-END PROCESS;
+	DISPLAY_SYNCS : process(i_clk)
+	begin
+		if rising_edge(i_clk) then
+			if r_H_Pos > C_HD + C_HFP and r_H_Pos <= C_HD + C_HFP + C_HSP then
+				o_h_sync <= '0';
+			else
+				o_h_sync <= '1';
+			end if;
+			if r_V_Pos > C_VD + C_VFP and r_V_Pos <= C_VD + C_VFP + C_VSP then
+				o_v_sync <= '0';
+			else
+				o_v_sync <= '1';
+			end if;
+		end if;
+	end process;
 
-buffer_syncs:PROCESS(I_CLK)
-BEGIN
-	IF(rising_edge(I_CLK)) THEN
-		IF(H_POS = C_HD + C_HFP + C_HSP + C_HBP) THEN
-			IF(V_POS = C_VD + C_VFP + C_VSP + C_VBP) THEN
-				O_V_BUF_SYNC <= '1';
-			ELSE
-				O_H_BUF_SYNC <= '1';
-			END IF;
-		ELSE
-			O_H_BUF_SYNC <= '0';
-			O_V_BUF_SYNC <= '0';
-		END IF;
-	END IF;
-END PROCESS;
+	BUFFER_SYNCS : process(i_clk)
+	begin
+		if rising_edge(i_clk) then
+			if r_H_Pos = C_HD + C_HFP + C_HSP + C_HBP then
+				if r_V_Pos = C_VD + C_VFP + C_VSP + C_VBP then
+					o_v_buf_sync <= '1';
+				else
+					o_h_buf_sync <= '1';
+				end if;
+			else
+				o_h_buf_sync <= '0';
+				o_v_buf_sync <= '0';
+			end if;
+		end if;
+	end process;
 
-O_BLANKing:PROCESS(I_CLK)
-BEGIN
-	IF(rising_edge(I_CLK)) THEN
-		IF(H_POS > C_HD + 1 OR V_POS > C_VD + 1) THEN
-			O_BLANK <= '0';
-		ELSE
-			O_BLANK <= '1';
-		END IF;
-	END IF;
-END PROCESS;
+	O_BLANKING : process(i_clk)
+	begin
+		if rising_edge(i_clk) then
+			if r_H_Pos > C_HD + 1 OR r_V_Pos > C_VD + 1 then
+				o_blank <= '0';
+			else
+				o_blank <= '1';
+			end if;
+		end if;
+	end process;
+
 end architecture RTL;
