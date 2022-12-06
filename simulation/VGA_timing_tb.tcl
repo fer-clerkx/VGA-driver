@@ -108,7 +108,7 @@ namespace eval ::VGATimingTB {
 	}
 
 	# Function handles signal polarity, 1 is active, 0 is inactive
-	proc checkPorts { expectedBlankValue expectedHValue expectedVValue expectedEnableValue } {
+	proc checkPorts { expectedBlankValue expectedHValue expectedVValue } {
 		variable hPol
 		variable vPol
 		variable blankPol
@@ -127,7 +127,6 @@ namespace eval ::VGATimingTB {
 		} else {
 			checkSignal Blank [expr !$blankPol]
 		}
-		checkSignal Rd_En $expectedEnableValue
 	}
 
 	# Initialize testbench
@@ -136,212 +135,212 @@ namespace eval ::VGATimingTB {
 
 	# Case #1: first active pixel, first active line
 	printMsg "Case #1: first active pixel, first active line"
-	checkPorts 1 0 0 1
+	checkPorts 1 0 0
 	checkRdAddress 0 0
 
 	# Case #2: second active pixel, first active line
 	printMsg "Case #2: second active pixel, first active line"
 	runClockCycles 1
-	checkPorts 0 0 0 1
+	checkPorts 0 0 0
 	checkRdAddress 1 0
 
 	# Case #3: last active pixel, first active line
 	printMsg "Case #3: last active pixel, first active line"
 	runClockCycles [expr $hActive-2]
-	checkPorts 0 0 0 1
+	checkPorts 0 0 0
 	checkRdAddress [expr $hActive-1] 0
 
 	# Case #4: first FP pixel, first active line
 	printMsg "Case #4: first FP pixel, first active line"
 	runClockCycles 1
-	checkPorts 0 0 0 0
+	checkPorts 0 0 0
 
 	# Case #5: second FP pixel, first active line
 	printMsg "Case #5: second FP pixel, first active line"
 	runClockCycles 1
-	checkPorts 1 0 0 0
+	checkPorts 1 0 0
 
 	# Case #6: first sync pixel, first active line
 	printMsg "Case #6: first sync pixel, first active line"
 	runClockCycles [expr $hFP-1]
-	checkPorts 1 0 0 0
+	checkPorts 1 0 0
 
 	# Case #7: second sync pixel, first active line
 	printMsg "Case #7: second sync pixel, first active line"
 	runClockCycles 1
-	checkPorts 1 1 0 0
+	checkPorts 1 1 0
 
 	# Case #8: first BP pixel, first active line
 	printMsg "Case #8: first BP pixel, first active line"
 	runClockCycles [expr $hSP-1]
-	checkPorts 1 1 0 0
+	checkPorts 1 1 0
 
 	# Case #9: second BP pixel, first active line
 	printMsg "Case #9: second BP pixel, first active line"
 	runClockCycles 1
-	checkPorts 1 0 0 0
+	checkPorts 1 0 0
 
 	# Case #10: last BP pixel, first active line
 	printMsg "Case #10: last BP pixel, first active line"
 	runClockCycles [expr $hBP-2]
-	checkPorts 1 0 0 0
+	checkPorts 1 0 0
 
 
 	# Case #11: first active pixel, last active line
 	printMsg "Case #11: first active pixel, last active line"
 	runClockCycles [expr $hTotal * [expr $vActive-2] + 1]
-	checkPorts 1 0 0 1
+	checkPorts 1 0 0
 	checkRdAddress 0 [expr $vActive-1]
 
 	# Case #12: second active pixel, last active line
 	printMsg "Case #12: second active pixel, last active line"
 	runClockCycles 1
-	checkPorts 0 0 0 1
+	checkPorts 0 0 0
 	checkRdAddress 1 [expr $vActive-1]
 
 	# Case #13: last active pixel, last active line
 	printMsg "Case #13: last active pixel, last active line"
 	runClockCycles [expr $hActive-2]
-	checkPorts 0 0 0 1
+	checkPorts 0 0 0
 	checkRdAddress [expr $hActive-1] [expr $vActive-1]
 
 	# Case #14: first FP pixel, last active line
 	printMsg "Case #14: first FP pixel, last active line"
 	runClockCycles 1
-	checkPorts 0 0 0 0
+	checkPorts 0 0 0
 
 	# Case #15: second FP pixel, last active line
 	printMsg "Case #15: second FP pixel, last active line"
 	runClockCycles 1
-	checkPorts 1 0 0 0
+	checkPorts 1 0 0
 
 	# Case #16: first sync pixel, last active line
 	printMsg "Case #16: first sync pixel, last active line"
 	runClockCycles [expr $hFP-1]
-	checkPorts 1 0 0 0
+	checkPorts 1 0 0
 
 	# Case #17: second sync pixel, last active line
 	printMsg "Case #17: second sync pixel, last active line"
 	runClockCycles 1
-	checkPorts 1 1 0 0
+	checkPorts 1 1 0
 
 	# Case #18: first BP pixel, last active line
 	printMsg "Case #18: first BP pixel, last active line"
 	runClockCycles [expr $hSP-1]
-	checkPorts 1 1 0 0
+	checkPorts 1 1 0
 
 	# Case #19: second BP pixel, last active line
 	printMsg "Case #19: second BP pixel, last active line"
 	runClockCycles 1
-	checkPorts 1 0 0 0
+	checkPorts 1 0 0
 
 	# Case #20: last BP pixel, last active line
 	printMsg "Case #20: last BP pixel, last active line"
 	runClockCycles [expr $hBP-2]
-	checkPorts 1 0 0 0
+	checkPorts 1 0 0
 
 
 	# Case #21: first active pixel, first FP line
 	printMsg "Case #21: first active pixel, first FP line"
 	runClockCycles 1
-	checkPorts 1 0 0 0
+	checkPorts 1 0 0
 
 	# Case #22: second active pixel, first FP line
 	printMsg "Case #22: second active pixel, first FP line"
 	runClockCycles 1
-	checkPorts 1 0 0 0
+	checkPorts 1 0 0
 
 	# Case #23: first sync pixel, first FP line
 	printMsg "Case #23: first sync pixel, first FP line"
 	runClockCycles [expr $hActive+$hFP-1]
-	checkPorts 1 0 0 0
+	checkPorts 1 0 0
 
 	# Case #24: second sync pixel, first FP line
 	printMsg "Case #24: second sync pixel, first FP line"
 	runClockCycles 1
-	checkPorts 1 1 0 0
+	checkPorts 1 1 0
 
 	# Case #25: first BP pixel, first FP line
 	printMsg "Case #25: first BP pixel, first FP line"
 	runClockCycles [expr $hSP-1]
-	checkPorts 1 1 0 0
+	checkPorts 1 1 0
 
 	# Case #26: second BP pixel, first FP line
 	printMsg "Case #26: second BP pixel, first FP line"
 	runClockCycles 1
-	checkPorts 1 0 0 0
+	checkPorts 1 0 0
 
 
 	# Case #27: first active pixel, first sync line
 	printMsg "Case #27: first active pixel, first sync line"
 	runClockCycles [expr $hBP-1 + $hTotal*[expr $vFP-1]]
-	checkPorts 1 0 0 0
+	checkPorts 1 0 0
 
 	# Case #28: second active pixel, first sync line
 	printMsg "Case #28: second active pixel, first sync line"
 	runClockCycles 1
-	checkPorts 1 0 1 0
+	checkPorts 1 0 1
 
 	# Case #29: first sync pixel, first sync line
 	printMsg "Case #29: first sync pixel, first sync line"
 	runClockCycles [expr $hActive + $hFP - 1]
-	checkPorts 1 0 1 0
+	checkPorts 1 0 1
 
 	# Case #30: second sync pixel, first sync line
 	printMsg "Case #30: second sync pixel, first sync line"
 	runClockCycles 1
-	checkPorts 1 1 1 0
+	checkPorts 1 1 1
 
 	# Case #31: first BP pixel, first sync line
 	printMsg "Case #31: first BP pixel, first sync line"
 	runClockCycles [expr $hSP-1]
-	checkPorts 1 1 1 0
+	checkPorts 1 1 1
 
 	# Case #32: second BP pixel, first sync line
 	printMsg "Case #32: second BP pixel, first sync line"
 	runClockCycles 1
-	checkPorts 1 0 1 0
+	checkPorts 1 0 1
 
 
 	# Case #33: first active pixel, first BP line
 	printMsg "Case #33: first active pixel, first BP line"
 	runClockCycles [expr $hBP-1 + $hTotal*[expr $vSP-1]]
-	checkPorts 1 0 1 0
+	checkPorts 1 0 1
 
 	# Case #34: second active pixel, first BP line
 	printMsg "Case #34: second active pixel, first BP line"
 	runClockCycles 1
-	checkPorts 1 0 0 0
+	checkPorts 1 0 0
 
 	# Case #35: first sync pixel, first BP line
 	printMsg "Case #35: first sync pixel, first BP line"
 	runClockCycles [expr $hActive+$hFP-1]
-	checkPorts 1 0 0 0
+	checkPorts 1 0 0
 
 	# Case #36: second sync pixel, first BP line
 	printMsg "Case #36: second sync pixel, first BP line"
 	runClockCycles 1
-	checkPorts 1 1 0 0
+	checkPorts 1 1 0
 
 	# Case #37: first BP pixel, first BP line
 	printMsg "Case #37: first BP pixel, first BP line"
 	runClockCycles [expr $hSP-1]
-	checkPorts 1 1 0 0
+	checkPorts 1 1 0
 
 	# Case #38: second BP pixel, first BP line
 	printMsg "Case #38: second BP pixel, first BP line"
 	runClockCycles 1
-	checkPorts 1 0 0 0
+	checkPorts 1 0 0
 
 
 	# Case #39: last BP pixel, last BP line
 	printMsg "Case #39: last BP pixel, last BP line"
 	runClockCycles [expr $hBP-2 + $hTotal*[expr $vBP-1]]
-	checkPorts 1 0 0 0
+	checkPorts 1 0 0
 
 
-	# Case 40: reset test, maximum address
-	printMsg "Case 40: reset test, maximum address"
+	# Case #40: reset test, maximum address
+	printMsg "Case #40: reset test, maximum address"
 	runClockCycles [expr $hTotal*$vActive-1]
 	force Rst 1
 	runClockCycles 1

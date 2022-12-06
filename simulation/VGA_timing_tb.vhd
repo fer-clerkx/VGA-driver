@@ -20,7 +20,6 @@ architecture sim of VGA_timing_tb is
     signal V_Sync	: std_logic;
     signal Blank	: std_logic;
     signal Rd_Addr	: std_logic_vector(18 downto 0);
-    signal Rd_En	: std_logic;
 
 begin
 
@@ -33,8 +32,7 @@ begin
         o_h_sync	=> H_Sync,
         o_v_sync	=> V_Sync,
         o_blank		=> Blank,
-        o_rd_addr	=> Rd_Addr,
-        o_rd_en		=> Rd_En
+        o_rd_addr	=> Rd_Addr
     );
 
 	FIND_START : process

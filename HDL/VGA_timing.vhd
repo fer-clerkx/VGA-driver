@@ -13,8 +13,7 @@ entity VGA_timing is
 		o_v_sync	: out std_logic := not c_V_POL;
 		o_blank		: out std_logic := not c_BLANK_POL;
 
-		o_rd_addr	: out std_logic_vector(18 downto 0);
-		o_rd_en		: out std_logic
+		o_rd_addr	: out std_logic_vector(18 downto 0)
     );
 end entity VGA_timing;
 
@@ -107,15 +106,6 @@ begin
 			o_h_sync <= r_H_Sync;
 			o_v_sync <= r_V_Sync;
 			o_blank <= r_Blank;
-		end if;
-	end process;
-
-	ENABLE : process(r_Blank)
-	begin
-		if r_Blank = c_BLANK_POL then
-			o_rd_en <= '0';
-		else
-			o_rd_en <= '1';
 		end if;
 	end process;
 
