@@ -10,14 +10,15 @@
 #	- <instance>.qip (synthesis)
 #	- <instance>.v (synthesis)
 #	- <module>.vho (simulation)
-/IP/*/*.bsf
-/IP/*/*.cmp
-/IP/*/*.ppf
-/IP/*/*.sip
-/IP/*/*.spd
-/IP/*/*_sim.f
-/IP/*/*_sim/**
-!/IP/*/*_sim/*.vho
+/ip/*/*.bsf
+/ip/*/*.cmp
+/ip/*/*.ppf
+/ip/*/*.sip
+/ip/*/*.spd
+/ip/*/*_sim.f
+/ip/*/*_sim/**
+!/ip/*/*_sim/*.vho
+/ip/*/greybox_tmp
 
 #Ignore modelsim auto generated files
 /simulation/work/*
@@ -26,4 +27,4 @@
 /simulation/*.wlf
 
 #Ignore backup files
-/HDL/*.bak
+/hdl/*.bak

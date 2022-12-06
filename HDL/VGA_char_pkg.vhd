@@ -1,26 +1,29 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
 
-entity char_library is
-	port (
-			i_clk			: in	std_logic;
-			i_rst			: in	std_logic;
-			
-			i_h_lib_sync	: in	std_logic;
-			i_v_lib_sync	: in	std_logic;
-			i_sel			: in	integer range 0 to 36;
-
-			o_pix			: out	std_logic
-		);
-end entity char_library;
-
-architecture RTL of char_library is
-
-	type t_char is array(9 downto 0) of std_logic_vector(0 to 7);
-	type t_char_array is array(36 downto 0) of t_char;
+package VGA_Char_Pkg is
 	
-	constant C_LIB : t_char_array := (
+	constant c_H_ACTIVE	: integer := 640;	--Horizontal screen width
+	constant c_H_FP		: integer := 8;		--Horizontal front porch
+	constant c_H_SP		: integer := 32;	--Horizontal sync width
+	constant c_H_BP		: integer := 40;	--Horizontal back porch
+	constant c_H_TOTAL	: integer := c_H_ACTIVE + c_H_FP + c_H_SP + c_H_BP;
+
+	constant c_V_ACTIVE	: integer := 480;	--Vertical screen height
+	constant c_V_FP		: integer := 1;		--Vertical front porch
+	constant c_V_SP		: integer := 8;		--Vertical sync heigth
+	constant c_V_BP		: integer := 6;		--Vertical back porch
+	constant c_V_TOTAL	: integer := c_V_ACTIVE + c_V_FP + c_V_SP + c_V_BP;
+
+	constant c_H_POL		: std_logic := '1';	--Horizontal sync polarity
+	constant c_V_POL		: std_logic := '0';	--Vertical sync polarity
+	constant c_BLANK_POL	: std_logic := '0';	--Blank polarity
+
+	constant c_LIB_SIZE	: integer := 47;
+	type t_CHAR is array(0 to 9) of std_logic_vector(0 to 7);
+	type t_CHAR_ARRAY is array(0 to c_LIB_SIZE-1) of t_CHAR;
+
+	constant c_LIB : t_CHAR_ARRAY := (
 		0 => (	--char = '0'
 			0 => "00000000",
 			1 => "00111000",
@@ -32,7 +35,7 @@ architecture RTL of char_library is
 			7 => "00111000",
 			8 => "00000000",
 			9 => "00000000"),
-										
+
 		1 => (	--char = '1'
 			0 => "00000000",
 			1 => "00010000",
@@ -56,7 +59,7 @@ architecture RTL of char_library is
 			7 => "01111100",
 			8 => "00000000",
 			9 => "00000000"),
-																			
+
 		3 => (	--char = '3'
 			0 => "00000000",
 			1 => "01111100",
@@ -79,8 +82,8 @@ architecture RTL of char_library is
 			6 => "00001000",
 			7 => "00001000",
 			8 => "00000000",
-			9 => "00000000"),	
-									
+			9 => "00000000"),
+
 		5 => (	--char = '5'
 			0 => "00000000",
 			1 => "01111100",
@@ -92,7 +95,7 @@ architecture RTL of char_library is
 			7 => "00111000",
 			8 => "00000000",
 			9 => "00000000"),
-										
+
 		6 => (	--char = '6'
 			0 => "00000000",
 			1 => "00011000",
@@ -116,7 +119,7 @@ architecture RTL of char_library is
 			7 => "00100000",
 			8 => "00000000",
 			9 => "00000000"),
-									
+
 		8 => (	--char = '8'
 			0 => "00000000",
 			1 => "00111000",
@@ -128,7 +131,7 @@ architecture RTL of char_library is
 			7 => "00111000",
 			8 => "00000000",
 			9 => "00000000"),
-									
+
 		9 => (	--char = '9'
 			0 => "00000000",
 			1 => "00111000",
@@ -140,7 +143,7 @@ architecture RTL of char_library is
 			7 => "00110000",
 			8 => "00000000",
 			9 => "00000000"),
-									
+
 		10 => (	--char = 'A'
 			0 => "00000000",
 			1 => "00111000",
@@ -152,8 +155,20 @@ architecture RTL of char_library is
 			7 => "01000100",
 			8 => "00000000",
 			9 => "00000000"),
-									
-		11 => (	--char = 'C'
+
+		11 => (	--char = 'B'
+			0 => "00000000",
+			1 => "01111000",
+			2 => "01000100",
+			3 => "01000100",
+			4 => "01111000",
+			5 => "01000100",
+			6 => "01000100",
+			7 => "01111000",
+			8 => "00000000",
+			9 => "00000000"),
+
+		12 => (	--char = 'C'
 			0 => "00000000",
 			1 => "00111000",
 			2 => "01000100",
@@ -164,8 +179,8 @@ architecture RTL of char_library is
 			7 => "00111000",
 			8 => "00000000",
 			9 => "00000000"),
-									
-		12 => (	--char = 'D'
+
+		13 => (	--char = 'D'
 			0 => "00000000",
 			1 => "01110000",
 			2 => "01001000",
@@ -176,8 +191,8 @@ architecture RTL of char_library is
 			7 => "01110000",
 			8 => "00000000",
 			9 => "00000000"),	
-									
-		13 => (	--char = 'E'
+
+		14 => (	--char = 'E'
 			0 => "00000000",
 			1 => "01111100",
 			2 => "01000000",
@@ -188,8 +203,8 @@ architecture RTL of char_library is
 			7 => "01111100",
 			8 => "00000000",
 			9 => "00000000"),
-								
-		14 => (	--char = 'F'
+
+		15 => (	--char = 'F'
 			0 => "00000000",
 			1 => "01111100",
 			2 => "01000000",
@@ -199,9 +214,9 @@ architecture RTL of char_library is
 			6 => "01000000",
 			7 => "01000000",
 			8 => "00000000",
-			9 => "00000000"),	
-									
-		15 => (	--char = 'G'
+			9 => "00000000"),
+
+		16 => (	--char = 'G'
 			0 => "00000000",
 			1 => "00111000",
 			2 => "01000100",
@@ -212,8 +227,8 @@ architecture RTL of char_library is
 			7 => "00111100",
 			8 => "00000000",
 			9 => "00000000"),
-									
-		16 => (	--char = 'H'
+
+		17 => (	--char = 'H'
 			0 => "00000000",
 			1 => "01000100",
 			2 => "01000100",
@@ -224,8 +239,8 @@ architecture RTL of char_library is
 			7 => "01000100",
 			8 => "00000000",
 			9 => "00000000"),
-									
-		17 => (	--char = 'I'
+
+		18 => (	--char = 'I'
 			0 => "00000000",
 			1 => "00111000",
 			2 => "00010000",
@@ -236,8 +251,32 @@ architecture RTL of char_library is
 			7 => "00111000",
 			8 => "00000000",
 			9 => "00000000"),
-									
-		18 => (	--char = 'L'
+
+		19 => (	--char = 'J'
+			0 => "00000000",
+			1 => "00011100",
+			2 => "00001000",
+			3 => "00001000",
+			4 => "00001000",
+			5 => "00001000",
+			6 => "01001000",
+			7 => "00110000",
+			8 => "00000000",
+			9 => "00000000"),
+
+		20 => (	--char = 'K'
+			0 => "00000000",
+			1 => "01000100",
+			2 => "01001000",
+			3 => "01010000",
+			4 => "01100000",
+			5 => "01010000",
+			6 => "01001000",
+			7 => "01000100",
+			8 => "00000000",
+			9 => "00000000"),
+
+		21 => (	--char = 'L'
 			0 => "00000000",
 			1 => "01000000",
 			2 => "01000000",
@@ -248,8 +287,20 @@ architecture RTL of char_library is
 			7 => "01111100",
 			8 => "00000000",
 			9 => "00000000"),
-									
-		19 => (	--char = 'N'
+
+		22 => (	--char = 'M'
+			0 => "00000000",
+			1 => "01000100",
+			2 => "01101100",
+			3 => "01010100",
+			4 => "01010100",
+			5 => "01000100",
+			6 => "01000100",
+			7 => "01000100",
+			8 => "00000000",
+			9 => "00000000"),
+
+		23 => (	--char = 'N'
 			0 => "00000000",
 			1 => "01000100",
 			2 => "01000100",
@@ -260,8 +311,8 @@ architecture RTL of char_library is
 			7 => "01000100",
 			8 => "00000000",
 			9 => "00000000"),
-									
-		20 => (	--char = 'O'
+
+		24 => (	--char = 'O'
 			0 => "00000000",
 			1 => "00111000",
 			2 => "01000100",
@@ -272,8 +323,32 @@ architecture RTL of char_library is
 			7 => "00111000",
 			8 => "00000000",
 			9 => "00000000"),
-									
-		21 => (	--char = 'R'
+
+		25 => (	--char = 'P'
+			0 => "00000000",
+			1 => "01111000",
+			2 => "01000100",
+			3 => "01000100",
+			4 => "01111000",
+			5 => "01000000",
+			6 => "01000000",
+			7 => "01000000",
+			8 => "00000000",
+			9 => "00000000"),
+
+		26 => (	--char = 'Q'
+			0 => "00000000",
+			1 => "00111000",
+			2 => "01000100",
+			3 => "01000100",
+			4 => "01000100",
+			5 => "01010100",
+			6 => "01001000",
+			7 => "00110100",
+			8 => "00000000",
+			9 => "00000000"),
+
+		27 => (	--char = 'R'
 			0 => "00000000",
 			1 => "01111100",
 			2 => "01000100",
@@ -284,8 +359,8 @@ architecture RTL of char_library is
 			7 => "01000100",
 			8 => "00000000",
 			9 => "00000000"),
-									
-		22 => (	--char = 'S'
+
+		28 => (	--char = 'S'
 			0 => "00000000",
 			1 => "00111100",
 			2 => "01000000",
@@ -296,8 +371,8 @@ architecture RTL of char_library is
 			7 => "01111000",
 			8 => "00000000",
 			9 => "00000000"),
-									
-		23 => (	--char = 'T'
+
+		29 => (	--char = 'T'
 			0 => "00000000",
 			1 => "01111100",
 			2 => "00010000",
@@ -308,8 +383,8 @@ architecture RTL of char_library is
 			7 => "00010000",
 			8 => "00000000",
 			9 => "00000000"),
-									
-		24 => (	--char = 'U'
+
+		30 => (	--char = 'U'
 			0 => "00000000",
 			1 => "01000100",
 			2 => "01000100",
@@ -320,8 +395,20 @@ architecture RTL of char_library is
 			7 => "00111000",
 			8 => "00000000",
 			9 => "00000000"),
-									
-		25 => (	--char = 'W'
+
+		31 => (	--char = 'V'
+			0 => "00000000",
+			1 => "01000100",
+			2 => "01000100",
+			3 => "01000100",
+			4 => "01000100",
+			5 => "01000100",
+			6 => "00101000",
+			7 => "00010000",
+			8 => "00000000",
+			9 => "00000000"),
+
+		32 => (	--char = 'W'
 			0 => "00000000",
 			1 => "01000100",
 			2 => "01000100",
@@ -332,8 +419,8 @@ architecture RTL of char_library is
 			7 => "00101000",
 			8 => "00000000",
 			9 => "00000000"),
-									
-		26 => (	--char = 'X'
+
+		33 => (	--char = 'X'
 			0 => "00000000",
 			1 => "01000100",
 			2 => "01000100",
@@ -344,8 +431,8 @@ architecture RTL of char_library is
 			7 => "01000100",
 			8 => "00000000",
 			9 => "00000000"),
-									
-		27 => (	--char = 'Y'
+
+		34 => (	--char = 'Y'
 			0 => "00000000",
 			1 => "01000100",
 			2 => "01000100",
@@ -356,8 +443,8 @@ architecture RTL of char_library is
 			7 => "00010000",
 			8 => "00000000",
 			9 => "00000000"),
-									
-		28 => (	--char = 'Z'
+
+		35 => (	--char = 'Z'
 			0 => "00000000",
 			1 => "01111100",
 			2 => "00000100",
@@ -368,8 +455,8 @@ architecture RTL of char_library is
 			7 => "01111100",
 			8 => "00000000",
 			9 => "00000000"),
-									
-		29 => (	--char = '?'
+
+		36 => (	--char = '?'
 			0 => "00000000",
 			1 => "00111000",
 			2 => "01000100",
@@ -379,9 +466,9 @@ architecture RTL of char_library is
 			6 => "00000000",
 			7 => "00010000",
 			8 => "00000000",
-			9 => "00000000"),		
+			9 => "00000000"),
 
-		30 => (	--char = '='
+		37 => (	--char = '='
 			0 => "00000000",
 			1 => "00000000",
 			2 => "01111100",
@@ -391,9 +478,9 @@ architecture RTL of char_library is
 			6 => "00000000",
 			7 => "00000000",
 			8 => "00000000",
-			9 => "00000000"),	
+			9 => "00000000"),
 
-		31 => (	--char = '+'
+		38 => (	--char = '+'
 			0 => "00000000",
 			1 => "00010000",
 			2 => "00010000",
@@ -403,9 +490,9 @@ architecture RTL of char_library is
 			6 => "00000000",
 			7 => "00000000",
 			8 => "00000000",
-			9 => "00000000"),										
+			9 => "00000000"),
 
-		32 => (	--char = '-'
+		39 => (	--char = '-'
 			0 => "00000000",
 			1 => "00000000",
 			2 => "00000000",
@@ -415,9 +502,9 @@ architecture RTL of char_library is
 			6 => "00000000",
 			7 => "00000000",
 			8 => "00000000",
-			9 => "00000000"),	
-									
-		33 => (	--char = '*'
+			9 => "00000000"),
+
+		40 => (	--char = '*'
 			0 => "00000000",
 			1 => "00000000",
 			2 => "01010100",
@@ -429,7 +516,7 @@ architecture RTL of char_library is
 			8 => "00000000",
 			9 => "00000000"),
 
-		34 => (	--char = '/'
+		41 => (	--char = '/'
 			0 => "00000000",
 			1 => "00000000",
 			2 => "00000100",
@@ -439,9 +526,9 @@ architecture RTL of char_library is
 			6 => "01000000",
 			7 => "00000000",
 			8 => "00000000",
-			9 => "00000000"),	
-									
-		35 => (	--char = '!'
+			9 => "00000000"),
+
+		42 => (	--char = '!'
 			0 => "00000000",
 			1 => "00010000",
 			2 => "00010000",
@@ -452,8 +539,44 @@ architecture RTL of char_library is
 			7 => "00010000",
 			8 => "00000000",
 			9 => "00000000"),
-									
-		36 => (	--char = ' '
+
+		43 => (	--char = 'Block'
+			0 => "11111111",
+			1 => "11111111",
+			2 => "11111111",
+			3 => "11111111",
+			4 => "11111111",
+			5 => "11111111",
+			6 => "11111111",
+			7 => "11111111",
+			8 => "11111111",
+			9 => "11111111"),
+
+		44 => (	--char = 'Block Left'
+			0 => "00000011",
+			1 => "00000011",
+			2 => "00000011",
+			3 => "00000011",
+			4 => "00000011",
+			5 => "00000011",
+			6 => "00000011",
+			7 => "00000011",
+			8 => "00000011",
+			9 => "00000011"),
+
+		45 => (	--char = 'Block Right'
+			0 => "11000000",
+			1 => "11000000",
+			2 => "11000000",
+			3 => "11000000",
+			4 => "11000000",
+			5 => "11000000",
+			6 => "11000000",
+			7 => "11000000",
+			8 => "11000000",
+			9 => "11000000"),
+
+		46 => (	--char = ' '
 			0 => "00000000",
 			1 => "00000000",
 			2 => "00000000",
@@ -466,33 +589,11 @@ architecture RTL of char_library is
 			9 => "00000000")
 	);
 
-begin
+	type t_WR_REQ is record
+		sel : integer range 0 to c_LIB_SIZE;
+		scale : integer range 0 to 3;
+		h_addr : integer range 0 to c_H_ACTIVE-1;
+		v_addr : integer range 0 to c_V_ACTIVE-1;
+	end record t_WR_REQ;
 
-	OUTPUT : process(i_clk, i_rst)
-		variable v_H_Pix : integer := 0;
-		variable v_V_PIX : integer := 0;
-	begin
-		if i_rst = '1' then
-			v_H_Pix := 0;
-			v_V_PIX := 0;
-		elsif rising_edge(i_clk) then
-			o_pix <= C_LIB(i_sel)(v_V_PIX / 4)(v_H_Pix / 4);
-			if i_v_lib_sync = '1' then
-				v_H_Pix := 0;
-				v_V_PIX := 0;
-			elsif i_h_lib_sync = '1' then
-				v_H_Pix := 0;
-				if v_V_PIX < 39 then
-					v_V_PIX := v_V_PIX + 1;
-				else
-					v_V_PIX := 0;
-				end if;
-			elsif v_H_Pix < 31 then
-				v_H_Pix := v_H_Pix + 1;
-			else
-				v_H_Pix := 0;
-			end if;
-		end if;
-	end process;
-	
-end architecture RTL;
+end package;
